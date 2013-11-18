@@ -44,8 +44,9 @@ to_json(Req, #st{resource_module = M, resource_id = Id} = State) ->
                  _         -> {struct, M:to_json(M:get(Id))} end,
     {iolist_to_binary(n2o_json:encode(Struct)), Req, State}.
 
-content_types_accepted(Req, State) -> {[{<<"application/x-www-form-urlencoded">>, handle_urlencoded_data},
-                                        {<<"application/json">>, handle_json_data}], Req, State}.
+content_types_accepted(Req, State) -> 
+    {[{{<<"application">>,<<"x-www-form-urlencoded">>, '*'}, handle_urlencoded_data},
+    {{<<"application">>,<<"json">>, '*'}, handle_json_data}], Req, State}.
 
 handle_urlencoded_data(Req, #st{resource_module = M, resource_id = Id} = State) ->
     {ok, Data, Req2} = cowboy_req:body_qs(Req),
